@@ -295,7 +295,7 @@ class EmoEditDataset_MultiData(Dataset):
         try:
             precomputed = torch.load(embed_path, map_location="cpu")
         except FileNotFoundError:
-            raise FileNotFoundError(f"预计算特征文件不存在: {embed_path}")
+            raise FileNotFoundError(f"The precomputed feature file does not exist: {embed_path}")
 
         example['origin_image_embeds'] = precomputed['origin_image_embeds']
         example['instruction_embeds'] = precomputed['instruction_embeds']

@@ -3,3 +3,5 @@ experiment*/
 __pycache__/
 inference_results/
 test_results/
+.claude
+.vscode
