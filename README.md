@@ -77,6 +77,26 @@ Parameters:
 
 ### 5. Evaluation
 
+**VAPredictor evaluation** (Valence MAE, Arousal MAE, Spearman Correlation):
+
+```bash
+python metrics/evaluate_mm_vap.py \
+    --truth_csv /path/to/val/labels.csv \
+    --image_dir /path/to/val/images \
+    --clip_model_path /path/to/clip-vit-base-patch32 \
+    --checkpoint_path runs/mm_vap/va_predictor_best.pth \
+    --device cuda:0 \
+    --suffix .jpg
+```
+
+Parameters:
+- `--truth_csv`: Ground truth CSV file with columns `Id`, `Valence`, `Arousal`, `Emotional_Prompt`
+- `--image_dir`: Directory containing validation images
+- `--clip_model_path`: Path to CLIP model (clip-vit-base-patch32)
+- `--checkpoint_path`: Path to VAPredictor checkpoint
+- `--device`: Device for inference (default: `cuda:0`)
+- `--suffix`: Image file suffix (default: `.jpg`)
+
 **Emotion-related metrics** (Valence Error, Arousal Error, EGS, Edit Diversity):
 
 ```bash

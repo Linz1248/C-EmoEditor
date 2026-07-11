@@ -24,7 +24,7 @@ def inverse_scale_from_0_1(v, a):
 def predict_va(va_predictor, image_dir, image_name, prompt, device, clip_processor, clip_model):
 
     with torch.no_grad():
-        image_path = os.path.join(image_dir, f"{image_name}.jpg")
+        image_path = os.path.join(image_dir, image_name)
 
         image = Image.open(image_path).convert("RGB")
 
@@ -46,7 +46,7 @@ def predict_va(va_predictor, image_dir, image_name, prompt, device, clip_process
         return (valence_pred_scale, arousal_pred_scale)
 
 
-def evaluate(truth_csv_path, device):
+def evaluate(truth_csv_path, image_dir, clip_model_path, checkpoint_path, device, suffix):
 
     try:
         truth_df = pd.read_csv(truth_csv_path)
@@ -62,15 +62,15 @@ def evaluate(truth_csv_path, device):
         print(f"Need: {required_cols}")
         return
 
-    clip_processor = CLIPProcessor.from_pretrained("/pretrained_models/clip-vit-base-patch32")      # TODO
-    clip_model = CLIPModel.from_pretrained("/pretrained_models/clip-vit-base-patch32").to(device)   # TODO
+    clip_processor = CLIPProcessor.from_pretrained(clip_model_path)
+    clip_model = CLIPModel.from_pretrained(clip_model_path).to(device)
     clip_model.requires_grad_(False).eval()
 
     vision_config = clip_model.config.vision_config
     text_config = clip_model.config.text_config
 
     model = VAPredictor(vision_config, text_config)
-    state = torch.load("runs/mm_vap/va_predictor_best.pth", map_location=device)   # TODO
+    state = torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(state, strict=True)
     model.to(device).eval()
 
@@ -90,9 +90,8 @@ def evaluate(truth_csv_path, device):
             prompt = row.Emotional_Prompt
         
 
-            # TODO
-            (pred_valence, pred_arousal) = predict_va(model, "/datasets/EmotiCrafter/val/images",
-                                                      image_id, prompt, device, clip_processor, clip_model)
+            (pred_valence, pred_arousal) = predict_va(model, image_dir,
+                                                      f"{image_id}{suffix}", prompt, device, clip_processor, clip_model)
             
             all_true_valence.append(true_valence)
             all_pred_valence.append(pred_valence)
@@ -134,15 +133,21 @@ if __name__ == "__main__":
         description="Evaluate MM_VAP",
         formatter_class=argparse.RawTextHelpFormatter
     )
-    
-    parser.add_argument("--truth_csv",type=str, default='/private/ljh/datasets/EmotiCrafter_split2/val/labels.csv')
-    
-    parser.add_argument("--image_dir", type=str, default='/private/ljh/datasets/EmotiCrafter_split2/val/images')
 
-    parser.add_argument("--device", type=str, default=torch.device('cuda:0'))
-
-    parser.add_argument("--suffix", type=str, default=".jpg")
+    parser.add_argument("--truth_csv", type=str, default='/datasets/EmotiCrafter/val/labels.csv',
+                        help="Path to ground truth CSV with columns: Id, Valence, Arousal")
+    parser.add_argument("--image_dir", type=str, default='/datasets/EmotiCrafter/val/images',
+                        help="Path to directory containing validation images")
+    parser.add_argument("--clip_model_path", type=str, default='/pretrained_models/clip-vit-base-patch32',
+                        help="Path to CLIP model (clip-vit-base-patch32)")
+    parser.add_argument("--checkpoint_path", type=str, default='runs/mm_vap/va_predictor_best.pth',
+                        help="Path to VAPredictor checkpoint")
+    parser.add_argument("--device", type=str, default='cuda:0',
+                        help="Device for inference")
+    parser.add_argument("--suffix", type=str, default=".jpg",
+                        help="Image file suffix")
     args = parser.parse_args()
 
-    evaluate(args.truth_csv, args.image_dir, args.device)
+    evaluate(args.truth_csv, args.image_dir, args.clip_model_path,
+             args.checkpoint_path, args.device, args.suffix)
 
