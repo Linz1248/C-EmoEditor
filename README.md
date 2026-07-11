@@ -125,5 +125,7 @@ We thank the following open-source projects and datasets:
 - [InstructPix2Pix](https://huggingface.co/timbrooks/instruct-pix2pix)
 - [CLIP](https://github.com/openai/CLIP)
 - [DINOv2](https://huggingface.co/facebook/dinov2-base)
-- [EmotiCrafter](https://pan.baidu.com/s/11utxyXJHp0ToUu7yS4ZOSg?pwd=7a7s)
+- [EmoEdit](https://github.com/JingyuanYY/EmoEdit)
+- [EmotiCrafter](https://github.com/idvxlab/EmotiCrafter)
+
 
