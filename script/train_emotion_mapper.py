@@ -592,9 +592,9 @@ if __name__ == "__main__":
         'diffusion_rate': 0.2,
         'instruction_rate': 1.0,
         'learning_rate': 0.0001,
-        'output_dir': 'experiment_results/runs_emotion_mapper',
-        'batch_size': 64,
-        'gradient_accumulation_steps': 2
+        'output_dir': 'runs',
+        'batch_size': 128,
+        'gradient_accumulation_steps': 1
     } #TODO
     os.makedirs(config_dic['output_dir'], exist_ok=True)
     args = parse_args(**config_dic)

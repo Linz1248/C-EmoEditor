@@ -98,14 +98,14 @@ def main(origin_img_dir, target_img_dir, device):
     arousal_errors = []
     egs_scores = []
 
-    clip_processor = CLIPProcessor.from_pretrained("/private/ljh/pretrained_models/clip-vit-base-patch32")   # TODO
-    clip_model = CLIPModel.from_pretrained("/private/ljh/pretrained_models/clip-vit-base-patch32").to(device)    # TODO
+    clip_processor = CLIPProcessor.from_pretrained("/pretrained_models/clip-vit-base-patch32")   # TODO
+    clip_model = CLIPModel.from_pretrained("/pretrained_models/clip-vit-base-patch32").to(device)    # TODO
     clip_model.requires_grad_(False).eval()
 
     vision_config = clip_model.config.vision_config
     text_config = clip_model.config.text_config
     va_model = VAPredictor(vision_config=vision_config, text_config=text_config).to(device)
-    state = torch.load("experiment_results/runs_mm_vap/model_latest.pth", map_location=device)   # TODO
+    state = torch.load("runs/mm_vap/model_latest.pth", map_location=device)   # TODO
     va_model.load_state_dict(state, strict=True)
     va_model.to(device).eval()
 
@@ -184,7 +184,6 @@ def main(origin_img_dir, target_img_dir, device):
     avg_a_err = np.mean(a_err_array)
     avg_egs = np.mean(egs_array)
 
-    # 计算标准差
     std_v_err = np.std(v_err_array)
     std_a_err = np.std(a_err_array)
     std_egs = np.std(egs_array)
@@ -199,7 +198,7 @@ def main(origin_img_dir, target_img_dir, device):
 
 
 if __name__ == "__main__":
-    origin_img_dir="/private/ljh/datasets/EmoEditSet/test_original_405"   #TODO
-    target_img_dir = 'edited_results/validate_images/'    # TODO
-    device = torch.device("cuda:1")
+    origin_img_dir="/datasets/EmoEditSet/test_original_405"   #TODO
+    target_img_dir = 'validate_images/'    # TODO
+    device = torch.device("cuda:0")
     main(origin_img_dir=origin_img_dir, target_img_dir=target_img_dir, device=device)

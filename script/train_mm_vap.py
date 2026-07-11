@@ -320,9 +320,9 @@ def train(args):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_root', type=str, default='/private/ljh/datasets/EmotiCrafter_split2', help='Root folder prepended to relative image paths')
-    parser.add_argument('--output_dir', type=str, default='experiment_results/runs_mm_vap', help='Where to save checkpoints')
-    parser.add_argument('--clip_model', type=str, default='/private/ljh/pretrained_models/clip-vit-base-patch32', help='HuggingFace CLIP model identifier')
+    parser.add_argument('--data_root', type=str, default='/datasets/EmotiCrafter', help='Root folder prepended to relative image paths')
+    parser.add_argument('--output_dir', type=str, default='runs/mm_vap', help='Where to save checkpoints')
+    parser.add_argument('--clip_model', type=str, default='/pretrained_models/clip-vit-base-patch32', help='HuggingFace CLIP model identifier')
     parser.add_argument('--epochs', type=int, default=500)
     parser.add_argument('--save_per_epochs', type=int, default=100)
     parser.add_argument('--batch_size', type=int, default=256)

@@ -75,11 +75,12 @@ def preprocess_and_save(args):
     print("Complete processing all data!")
 
 if __name__ == "__main__":
+    # TODO
     config = {
-        'edited_data_root': "/private/ljh/datasets/EmoEditSet/edited_image_captions_weighted.csv",
-        'data_root': "/private/ljh/datasets/EmoEditSet",
+        'edited_data_root': "data/C-EmoEditSet.csv",
+        'data_root': "/dataset/EmoEditSet",
         'device': "cuda:0",
         'embed_save_name': "clip_cache",
-        'model_path': "/private/ljh/pretrained_models/clip-vit-large-patch14"
+        'model_path': "/pretrained_models/clip-vit-large-patch14"
     }
     preprocess_and_save(config)

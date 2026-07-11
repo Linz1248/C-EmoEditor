@@ -64,8 +64,8 @@ def count_CLIP_I(test_img, origin_img, model, processor):
 @torch.no_grad()
 class DINO_extractor():
     def __init__(self, device):
-        self.processor = AutoImageProcessor.from_pretrained("/private/ljh/pretrained_models/dinov2-base") # TODO
-        self.model = AutoModel.from_pretrained("/private/ljh/pretrained_models/dinov2-base").to(device) # TODO
+        self.processor = AutoImageProcessor.from_pretrained("/pretrained_models/dinov2-base") # TODO
+        self.model = AutoModel.from_pretrained("/pretrained_models/dinov2-base").to(device) # TODO
         self.origin_image_dino = {}
 
     @torch.no_grad()
@@ -87,8 +87,8 @@ def main(origin_img_dir, target_img_dir):
     device = torch.device("cuda:0")
     dino_Ex = DINO_extractor(device=device)
     lpips_alex = lpips.LPIPS(net='alex')
-    model = CLIPModel.from_pretrained("/private/ljh/pretrained_models/clip-vit-base-patch32").to(device) # TODO
-    processor = CLIPProcessor.from_pretrained("/private/ljh/pretrained_models/clip-vit-base-patch32") # TODO
+    model = CLIPModel.from_pretrained("/pretrained_models/clip-vit-base-patch32").to(device) # TODO
+    processor = CLIPProcessor.from_pretrained("/pretrained_models/clip-vit-base-patch32") # TODO
     test_img_paths = []
     for root, _, file_path in os.walk(target_img_dir):
         for file in file_path:
@@ -142,6 +142,6 @@ def main(origin_img_dir, target_img_dir):
 
 
 if __name__ == "__main__":
-    origin_img_dir = "/private/ljh/datasets/EmoEditSet/test_original_405/" # TODO
-    target_img_dir = 'edited_results/validate_images/'         # TODO
+    origin_img_dir = "/datasets/EmoEditSet/test_original_405/" # TODO
+    target_img_dir = 'validate_images/'         # TODO
     main(origin_img_dir=origin_img_dir, target_img_dir=target_img_dir)

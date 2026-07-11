@@ -40,7 +40,6 @@ def resize_image_to_512(img):
 def generate_va_pairs(count=10, min_val=-3.0, max_val=3.0):
     va_data = []
     for _ in range(count):
-        # 使用 random.uniform 获取指定范围内的浮点数
         valence = round(random.uniform(min_val, max_val), 2)
         arousal = round(random.uniform(min_val, max_val), 2)
         va_data.append((valence, arousal))
@@ -54,13 +53,13 @@ def main(checkpoint_path, image_dir, save_dir):
     validation_images_path = get_all_paths(image_dir, ['jpg','png'])
 
     pipeline = StableDiffusionInstructPix2PixPipeline.from_pretrained(
-        "/private/ljh/pretrained_models/instruct-pix2pix", requires_safety_checker=False, safety_checker=None,
+        "/pretrained_models/instruct-pix2pix", requires_safety_checker=False, safety_checker=None,
         torch_dtype=torch.float16)
     pipeline.set_progress_bar_config(disable=False)
     pipeline.to(device)
 
-    clip_model = CLIPModel.from_pretrained("/private/ljh/pretrained_models/clip-vit-large-patch14").eval().to(device)
-    processor = CLIPProcessor.from_pretrained("/private/ljh/pretrained_models/clip-vit-large-patch14")
+    clip_model = CLIPModel.from_pretrained("/pretrained_models/clip-vit-large-patch14").eval().to(device)    # TODO
+    processor = CLIPProcessor.from_pretrained("/pretrained_models/clip-vit-large-patch14")     # TODO
 
     model = EmotionMapper()
     trained_para = torch.load(checkpoint_path, map_location="cpu")
@@ -99,8 +98,8 @@ def main(checkpoint_path, image_dir, save_dir):
 
 if __name__ == "__main__":
 
-    checkpoint_path = '/private/ljh/backup_data/lanyun4090/C-EmoEdit/experiment_results_old/runs_emotion_mapper_v17_mseloss_0.2ldm/model_latest.pth'
-    image_dir = "/private/ljh/datasets/EmoEditSet/test_original_405"
+    checkpoint_path = 'runs/emotion_mapper/model_latest.pth'    # TODO
+    image_dir = "/datasets/EmoEditSet/test_original_405"   # TODO
 
 
     save_dir = './inference_results'
