@@ -5,9 +5,11 @@ sys.path.append(parent_dir)
 from tqdm import tqdm
 import torch
 import pandas as pd
+import numpy as np
 from transformers import CLIPModel, CLIPProcessor
 import argparse
 from PIL import Image
+from sklearn.ensemble import IsolationForest
 from model.mm_vap import *
 
 def inverse_scale_from_0_1(x):
@@ -65,9 +67,28 @@ def main(args):
     df['valence'] = valence
     df['arousal'] = arousal
 
+    # Isolation Forest outlier filtering
+    va_data = df[['valence', 'arousal']].values
+    iso_forest = IsolationForest(
+        n_estimators=100,
+        contamination='auto',
+        max_samples='auto',
+        random_state=args.random_seed,
+    )
+    labels = iso_forest.fit_predict(va_data)
+
+    n_before = len(df)
+    outlier_scores = iso_forest.decision_function(va_data)
+    df['iso_score'] = outlier_scores
+
+    inlier_mask = labels == 1
+    df_filtered = df[inlier_mask].reset_index(drop=True)
+    n_after = len(df_filtered)
+    n_outliers = n_before - n_after
+
     try:
-        df.to_csv(args.output_csv_path, index=False)
-        print(f"\nDone!")
+        df_filtered.to_csv(args.output_csv_path, index=False)
+        print(f"Saved filtered dataset to {args.output_csv_path}")
     except Exception as e:
         print(f"\nError: {e}")
 
@@ -81,6 +102,8 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint_path", type=str, default="runs/mm_vap/mm_vap_latest.pth")
     parser.add_argument("--clip_model_path", type=str, default="/pretrained_models/clip-vit-base-patch32")
     parser.add_argument("--device", type=str, default=torch.device("cuda:0"))
+    parser.add_argument("--random_seed", type=int, default=42,
+                        help="Random seed for Isolation Forest reproducibility. Default: 42")
     args = parser.parse_args()
 
     main(args)
