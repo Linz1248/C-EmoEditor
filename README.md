@@ -21,6 +21,13 @@ conda activate C-EmoEditor
 | [instruct-pix2pix](https://huggingface.co/timbrooks/instruct-pix2pix) | HuggingFace | EmotionMapper training & inference |
 | [dinov2-base](https://huggingface.co/facebook/dinov2-base) | HuggingFace | Evaluation (DINO-I metric) |
 
+## Datasets
+
+| Dataset | Description | Link |
+|---------|-------------|------|
+| EmotiCrafter | Training images for VAPredictor | [Baidu Drive](https://pan.baidu.com/s/11utxyXJHp0ToUu7yS4ZOSg?pwd=7a7s) (pwd: `7a7s`) |
+| EmoEditSet | Original dataset for constructing C-EmoEditSet | [Dropbox](https://www.dropbox.com/scl/fo/7tggp1e6n4zczq2yxgcz0/AP89ShFyi7tlzvMs9RvPy_w?rlkey=3b9bhojqhyqd4tao84rwo2p3b&st=buldfasb&dl=0) |
+
 ## Execution Steps
 
 ### 1. Preprocess: Extract CLIP Embeddings
@@ -110,4 +117,13 @@ python metrics/structure-semantic_preserving_metric.py
 ```
 
 > Modify the paths at the bottom of each script to point to your original images, edited results, and model checkpoints.
+
+## Acknowledgments
+
+We thank the following open-source projects and datasets:
+
+- [InstructPix2Pix](https://huggingface.co/timbrooks/instruct-pix2pix)
+- [CLIP](https://github.com/openai/CLIP)
+- [DINOv2](https://huggingface.co/facebook/dinov2-base)
+- [EmotiCrafter](https://pan.baidu.com/s/11utxyXJHp0ToUu7yS4ZOSg?pwd=7a7s)
 
